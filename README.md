@@ -1,3 +1,3 @@
 # API store
 
-Node.js + express.js
+Backend project with Node.js which consists of a REST API with Express.js.
