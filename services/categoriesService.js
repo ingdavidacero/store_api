@@ -1,33 +1,41 @@
-import { faker } from "@faker-js/faker";
 import Boom from "@hapi/boom";
+import sequelize from "../libs/sequelize.js";
+const models  = sequelize.models;
 
 class CategoriesService{
-  constructor(){
-    this.categories = [];
-    this.generate();
+  constructor(){}
+
+  async create(data){
+    const newCategory = await models.Category.create(data);
+    return newCategory;
   }
 
-  async generate(){
-    const limit = 10;
-    for (let index = 0; index < limit; index++) {
-        this.categories.push(
-        {
-          id: faker.datatype.uuid(),
-          name: faker.commerce.department()
-        }
-      );
-    }
+  async delete(id){
+    const category =  await this.findOne(id);
+    await category.destroy();
+    return {
+      id
+    };
   }
 
   async find(){
-    return this.categories;
+    const categories = await models.Category.findAll();
+    return categories;
   }
+
   async findOne(id){
-    const category = this.categories.find(item => item.id===id);
+    const category = await models.Category.findByPk(id,{include:['products']});
     if(!category){
       throw Boom.notFound('Category not found');
     }
+
     return category;
+  }
+
+  async update(id, changes){
+    const category = await this.findOne(id);
+    const rta = await category.update(changes);
+    return rta;
   }
 }
 
