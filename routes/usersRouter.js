@@ -1,4 +1,5 @@
 import { Router } from "express";
+import passport from 'passport';
 import UsersService from "../services/usersService.js";
 import { validatorHandler } from '../middlewares/validator.handler.js';
 import { getUserSchema, createUserSchema, updateUserSchema } from '../schemas/userSchema.js';
@@ -7,6 +8,7 @@ const usersRouter = Router();
 const service = new UsersService()
 
 usersRouter.get('/',
+  passport.authenticate('jwt',{session:false}),
   async (req,res)=>{
   try{
     const users = await service.find();
@@ -17,6 +19,7 @@ usersRouter.get('/',
 });
 
 usersRouter.get('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getUserSchema,'params'),
   async (req,res,next)=>{
   try {
@@ -29,6 +32,7 @@ usersRouter.get('/:id',
 })
 
 usersRouter.post('/',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(createUserSchema,'body'),
   async (req,res, next)=>{
     try{
@@ -41,6 +45,7 @@ usersRouter.post('/',
 });
 
 usersRouter.put('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getUserSchema,'params'),
   validatorHandler(createUserSchema,'body'),
   async (req,res, next)=>{
@@ -55,6 +60,7 @@ usersRouter.put('/:id',
 });
 
 usersRouter.patch('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getUserSchema,'params'),
   validatorHandler(updateUserSchema,'body'),
   async (req,res,next)=>{
@@ -69,6 +75,7 @@ usersRouter.patch('/:id',
 });
 
 usersRouter.delete('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getUserSchema,'params'),
   async (req,res,next)=>{
     try {

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import passport from 'passport';
 import ProductsService from '../services/productsService.js';
 import { validatorHandler } from '../middlewares/validator.handler.js';
 import { createProductSchema,updateProductSchema,getProductSchema, queryProductSchema } from '../schemas/productSchema.js';
@@ -7,6 +8,7 @@ const productsRouter = Router();
 const service = new ProductsService();
 
 productsRouter.get('/',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(queryProductSchema,'params'),
   async (req,res,next)=>{
     try {
@@ -22,6 +24,7 @@ productsRouter.get('/filter',(req,res)=>{
 })
 
 productsRouter.get('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getProductSchema,'params'),
   async (req,res,next)=>{
   try {
@@ -34,6 +37,7 @@ productsRouter.get('/:id',
 });
 
 productsRouter.post('/',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(createProductSchema,'body'),
   async (req, res, next)=>{
     try{
@@ -46,6 +50,7 @@ productsRouter.post('/',
 });
 
 productsRouter.put('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getProductSchema,'params'),
   validatorHandler(createProductSchema,'body'),
   async (req, res, next)=>{
@@ -60,6 +65,7 @@ productsRouter.put('/:id',
 })
 
 productsRouter.patch('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getProductSchema,'params'),
   validatorHandler(updateProductSchema,'body'),
   async (req,res,next)=>{
@@ -74,6 +80,7 @@ productsRouter.patch('/:id',
 })
 
 productsRouter.delete('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getProductSchema,'params'),
   async (req,res,next)=>{
     try {

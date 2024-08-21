@@ -1,4 +1,5 @@
-import { Router } from 'express'
+import { Router } from 'express';
+import passport from 'passport';
 import OrdersService from '../services/ordersService.js';
 import { validatorHandler } from '../middlewares/validator.handler.js';
 import {createOrderSchema, getOrderSchema, addItemSchema } from '../schemas/orderSchema.js';
@@ -17,6 +18,7 @@ orderRouter.get('/',
 });
 
 orderRouter.get('/:id',
+  passport.authenticate('jwt',{session:false}),
   validatorHandler(getOrderSchema,'params'),
   async (req,res,next)=>{
   try {
@@ -29,27 +31,29 @@ orderRouter.get('/:id',
 });
 
 orderRouter.post('/',
-validatorHandler(createOrderSchema,'body'),
-async (req, res, next)=>{
-  try{
-    const body = req.body;
-    const newOrder = await service.create(body);
-    res.status(201).json(newOrder);
-  }catch(error){
-    next(error);
-  }
+  passport.authenticate('jwt',{session:false}),
+  validatorHandler(createOrderSchema,'body'),
+  async (req, res, next)=>{
+    try{
+      const body = req.body;
+      const newOrder = await service.create(body);
+      res.status(201).json(newOrder);
+    }catch(error){
+      next(error);
+    }
 });
 
 orderRouter.post('/add-item',
-validatorHandler(addItemSchema,'body'),
-async (req, res, next)=>{
-  try{
-    const body = req.body;
-    const newItem = await service.addItem(body);
-    res.status(201).json(newItem);
-  }catch(error){
-    next(error);
-  }
+  passport.authenticate('jwt',{session:false}),
+  validatorHandler(addItemSchema,'body'),
+  async (req, res, next)=>{
+    try{
+      const body = req.body;
+      const newItem = await service.addItem(body);
+      res.status(201).json(newItem);
+    }catch(error){
+      next(error);
+    }
 });
 
 export default orderRouter;

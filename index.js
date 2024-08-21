@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import routerApi from "./routes/index.js";
+import { checkApiKey } from "./middlewares/auth.handler.js";
 import {logError, errorHandler, boomErrorHandler} from "./middlewares/error.handler.js";
 import queryErrorHandler from "./middlewares/queryerror.handler.js";
 
@@ -24,6 +25,16 @@ const options = {
   }
 }
 app.use(cors(options));
+
+import "./utils/auth/index.js";
+
+app.get('/',(req,res)=>{
+  res.send('Soy el server en express');
+});
+
+app.get('/ruta-prueba',checkApiKey, (req,res)=>{
+  res.send('Prueba de la ruta');
+});
 
 routerApi(app);
 
